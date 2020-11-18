@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, Text, Button } from 'react-native';
-
+import styles from '../styles/LoginScreen.style'
 function LoginScreen({navigation}) {
     return (
         <View style={styles.container}>
@@ -11,14 +11,3 @@ function LoginScreen({navigation}) {
 }
 
 export default LoginScreen;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    text: {
-        color: 'green'
-    }
-})
