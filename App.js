@@ -17,8 +17,8 @@ export default function App() {
        <NavigationContainer>
           <Stack.Navigator>
           <Stack.Screen name="MovieListScreen" component={ MovieListScreen } />
-            {/* <Stack.Screen name="LoginScreen" component={ LoginScreen } />
-            <Stack.Screen name="SignupScreen" component={ SignupScreen } /> */}
+           <Stack.Screen name="LoginScreen" component={ LoginScreen } />
+            <Stack.Screen name="SignupScreen" component={ SignupScreen } />
           </Stack.Navigator>
         </NavigationContainer>
     </ApplicationProvider>
