@@ -1,2 +1,11 @@
-const API_URL = 'https://api.themoviedb.org/3/movie/550?api_key=ae9c379c0a2f7020bfcc20e8fec6166e'
-const GET_GENRES_URL = '/genre/movie/list'
+import axios from 'axios'
+export const GetRequest = async(url) => {
+    let result = null
+    await fetch(url).then((response) => console.log(response)).catch((ex)=>console.log(ex))
+
+    // return result
+    // let result = await axios.get(url)
+    await console.log("url"+ url);
+    // await console.log(result);
+    return result;
+};
