@@ -2,6 +2,8 @@ import React from 'react';
 import {StyleSheet, Image, View, Alert} from 'react-native'
 import * as eva from '@eva-design/eva';
 import { IndexPath, Layout, Select, SelectItem, Card, Text, Avatar  } from '@ui-kitten/components';
+import {GetRequest} from '../utils/apiRequester'
+import {GetCategoryUrl} from '../utils/apiUrls'
 
 const MoviesList = [
     'Macera',
@@ -18,9 +20,9 @@ export const MoviesListScreen = () => {
     const renderOption = (title) => (
         <SelectItem title={title}/>
     );
-
-
+    
     return (
+        
         <>
       <Layout style={styles.container} level='1'>  
         <Select
@@ -29,6 +31,7 @@ export const MoviesListScreen = () => {
           onSelect={index => setSelectedIndex(index)}>
           {MoviesList.map(renderOption)}
         </Select>
+      
       </Layout>
       <Layout>
           <Card> 
@@ -78,7 +81,7 @@ export const MoviesListScreen = () => {
       </Layout>
       <Layout>
         <Card
-        onPress={() => {Alert.alert("Basıldı","Tıklandı")}}
+        onPress= {async ()=>{Alert.alert("aas",await GetRequest(await GetCategoryUrl()))}}
         onLongPress={()=> {Alert.alert("ad","asdada")}}
         > 
             <Text>
