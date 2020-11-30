@@ -4,6 +4,7 @@ import * as eva from '@eva-design/eva';
 import { IndexPath, Layout, Select, SelectItem, Card, Text, Avatar  } from '@ui-kitten/components';
 import {GetRequest} from '../utils/apiRequester'
 import {GetCategoryUrl} from '../utils/apiUrls'
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 class MovieListScreen extends React.Component  {
@@ -40,7 +41,7 @@ class MovieListScreen extends React.Component  {
     }
 
         return (
-        <>
+        <SafeAreaView>
         <Layout style={styles.container} level='1'>  
             <Select
             placeholder="Kategori Seçiniz"
@@ -126,8 +127,7 @@ class MovieListScreen extends React.Component  {
         </Layout>
         </Layout>
     }
-        
-    </>
+    </SafeAreaView>
         )};
     };
 
