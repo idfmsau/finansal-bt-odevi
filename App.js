@@ -12,7 +12,7 @@ export default function App() {
         <>
           <AuthenticatedNavigation />
         </>
-      ) : (
+      ) : ( 
         <NonAuthenticatedNavigation/>
       )}
     </ApplicationProvider>
