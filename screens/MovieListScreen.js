@@ -1,11 +1,12 @@
 import React from 'react';
-import {StyleSheet, Image, View, Alert,Button } from 'react-native'
-import * as eva from '@eva-design/eva';
-import { IndexPath, Layout, Select, SelectItem, Card, Text, Avatar  } from '@ui-kitten/components';
-import {GetRequest} from '../utils/apiRequester'
-import {GetCategoryUrl} from '../utils/apiUrls'
+import {StyleSheet, ScrollView, View, Dimensions } from 'react-native'
+import { Layout, Select, SelectItem } from '@ui-kitten/components';
+import { GetRequest, GetMovieRequest } from '../utils/apiRequester'
+import { GetCategoryUrl, GetMovieListFromGenre } from '../utils/apiUrls'
 import { SafeAreaView } from 'react-native-safe-area-context';
+import MovieCard from '../components/movieList/MovieCard';
 
+const { width, height } = Dimensions.get("window");
 
 class MovieListScreen extends React.Component  {
     constructor(props){
@@ -13,20 +14,23 @@ class MovieListScreen extends React.Component  {
         this.state = {
             selectedIndex : 0,
             displayValue : '',
+            GenresList : '',
             MoviesList : ''
         }
     }
 
-    setSelectedIndex = (index) => {
-        this.setState({
+    setSelectedIndex = async(index) => {
+        await this.setState({
             selectedIndex:index,
-            displayValue : this.state.MoviesList[index - 1].name
+            displayValue : this.state.GenresList[index - 1].name,
+            MoviesList : (index !==0 ?  await GetMovieRequest(await GetMovieListFromGenre(this.state.GenresList[index-1].id)) : '')
+            
         })
     }
 
     async componentDidMount() {
         this.setState({
-            MoviesList : await GetRequest(await GetCategoryUrl())
+            GenresList : await GetRequest(await GetCategoryUrl())
         })
     }
 
@@ -34,133 +38,40 @@ class MovieListScreen extends React.Component  {
         <SelectItem key={data.id} title={data.name}/>
     );
 
+    renderMovies = (data) => (
+        <MovieCard key={data.id} name={data.original_title} desc={data.overview} rDate={data.release_date} imagePath={data.poster_path}/>
+    );
+
     render(){
     let selectOptions;
-    if(this.state.MoviesList != ''){
-        selectOptions = this.state.MoviesList.map(this.renderOption)
+    if(this.state.GenresList != ''){
+        selectOptions = this.state.GenresList.map(this.renderOption)
     }
 
         return (
         <SafeAreaView>
-        <Layout style={styles.container} level='1'>  
-            <Select
-            placeholder="Kategori Seçiniz"
-            value={this.state.displayValue}
-            selectedIndex={this.state.selectedIndex}
-            onSelect={index => this.setSelectedIndex(index)}>
-            {selectOptions}        
-            </Select>
-        </Layout>
-        {this.state.displayValue == "Adventure" &&
-        <Layout>
-        <Layout>
-            <Card> 
-                <Text>
-                    <View style={styles.cardMain}>
-                        <Image
-                        style={styles.tinyLogo}
-                        source={require('../images/esaret.jpg')}
-                        />
-                        <Text>
-                        <View style={styles.cardHeader}>
-                            <Text category='h6' style={styles.cardHeader}>Esaretin Bedeli</Text>
-                        </View>
-                        <View style={styles.cardBody}>
-                            <Text category='s2' style={{width:270}} >Esaretin Bedeli, Andy ve Red isimli iki mahkumun parmaklıklar ardında kurdukları dünyanın hikayesini anlatıyor. Andy Dufresne, genç ve başarılı bir bankerdir. Karısını ve karısının sevgilisini öldürmek suçundan yargılanır ve ömür boyu hapis cezası alır. </Text>
-                        </View>
-                        <View style={styles.cardFooter}>
-                            <Text category='s2' style={{fontWeight:"800"}}>Yönetmen : Frank Darabont</Text>
-                        </View>
-                        </Text>
-                    </View>
-                </Text>
-            </Card>
-            </Layout>
-            <Layout>
-            <Card> 
-                <Text>
-                    <View style={styles.cardMain}>
-                        <Image
-                        style={styles.tinyLogo}
-                        source={require('../images/godfather.jpg')}
-                        />
-                        <Text>
-                        <View style={styles.cardHeader}>
-                            <Text category='h6' style={styles.cardHeader}>The Godfather</Text>
-                        </View>
-                        <View style={styles.cardBody}>
-                            <Text category='s2' style={{width:270}} >The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.</Text>
-                        </View>
-                        <View style={styles.cardFooter}>
-                            <Text category='s2' style={{fontWeight:"800"}}>Yönetmen : Francis Ford Coppola</Text>
-                        </View>
-                        </Text>
-                    </View>
-                </Text>
-            </Card>
-        </Layout>
-        <Layout>
-            <Card
-            onPress= {async ()=>{Alert.alert("aas",await GetRequest(await GetCategoryUrl()))}}
-            onLongPress={()=> {Alert.alert("ad","asdada")}}
-            > 
-                <Text>
-                    <View style={styles.cardMain}>
-                        <Image
-                        style={styles.tinyLogo}
-                        source={require('../images/12angrymen.jpg')}
-                        />
-                        <Text>
-                        <View style={styles.cardHeader}>
-                            <Text category='h6' style={styles.cardHeader}>12 Angry Man</Text>
-                        </View>
-                        <View style={styles.cardBody}>
-                            <Text category='s2' style={{width:270}} >A jury holdout attempts to prevent a miscarriage of justice by forcing his colleagues to reconsider the evidence.</Text>
-                        </View>
-                        <View style={styles.cardFooter}>
-                            <Text category='s2' style={{fontWeight:"800"}}>Yönetmen : Sidney Lumet</Text>
-                        </View>
-                        </Text>
-                    </View>
-                </Text>            
-            </Card>
-        </Layout>
-        </Layout>
-    }
-    </SafeAreaView>
+            <ScrollView>
+                <Layout level='1'>  
+                    <Select
+                    placeholder="Kategori Seçiniz"
+                    value={this.state.displayValue}
+                    selectedIndex={this.state.selectedIndex}
+                    onSelect={index => this.setSelectedIndex(index)}>
+                    {selectOptions}        
+                    </Select>
+                </Layout>
+                <View style={styles.mainView}>
+                    {this.state.MoviesList !== '' ? this.state.MoviesList.map(this.renderMovies) : <View></View>}
+                </View>
+            </ScrollView>
+        </SafeAreaView>
         )};
     };
 
 const styles = StyleSheet.create({
-    
-    container: {
-        maxHeight: 320,
-    },
-    tinyLogo: {
-        width: 100,
-        height: 150,
-    },
-    cardHeader: {
+    mainView: {
         flexDirection:'row',
-        paddingLeft: 5
-    },
-    cardBody: {
-        flexDirection:'row',
-        paddingLeft: 10
-    },
-    cardFooter: {
-        flexDirection:'row',
-        paddingLeft: 10,
-        fontWeight:"800"
-    },
-    cardMain: {
-        flexDirection:'row',
-        maxHeight:150
-    },
-    cardInText: {
-        flex:1,
-        flexDirection:'row',
-        width:200
+        flexWrap:'wrap'
     }
 });
 
