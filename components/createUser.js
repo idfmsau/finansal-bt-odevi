@@ -5,12 +5,10 @@ function createUser(email, password) {
     return (
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then((user) => {
-            console.log("Kullanıcı başarıyla kayıt oldu");
+            console.log(user);
         })
         .catch((error) => {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // ..
+            throw error.toString();
         })
     )
 }
