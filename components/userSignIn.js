@@ -1,4 +1,4 @@
-
+import {connect} from 'react-redux';
 import * as firebase from 'firebase';
 
 function userSignIn(email, password) {
@@ -14,4 +14,10 @@ function userSignIn(email, password) {
     )
 }
 
-export default userSignIn;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        loginUser: (user) => dispatch(loginUser(user))
+    }
+}
+
+export default connect(null,mapDispatchToProps)(userSignIn);
