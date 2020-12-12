@@ -7,19 +7,23 @@ import * as firebase from "firebase";
 import apiKey from "./config/keys";
 import { NavigationContainer } from "@react-navigation/native";
 
+import { Provider } from "react-redux";
+import store from "./store/store";
+
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   if (!firebase.apps.length) {
-    firebase.initializeApp({});
+    firebase.initializeApp(apiKey.firebaseConfig);
   } else {
     firebase.app();
   }
 
   return (
+    <Provider store={store}>
     <ApplicationProvider {...eva} theme={eva.light}>
       <NavigationContainer>
-        {isLoggedIn ? (
+        {store.getState(isLoggedIn) ? (
           <>
             <AuthenticatedNavigation />
           </>
@@ -28,5 +32,6 @@ export default function App() {
         )}
       </NavigationContainer>
     </ApplicationProvider>
+    </Provider>
   );
 }
