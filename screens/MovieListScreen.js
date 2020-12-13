@@ -1,10 +1,10 @@
 import React from 'react';
-import {StyleSheet, ScrollView, View, Dimensions, DatePickerAndroid } from 'react-native'
+import {StyleSheet, ScrollView, View, Dimensions, DatePickerAndroid } from 'react-native';
+import { connect } from 'react-redux';
 import { Layout, Select, SelectItem } from '@ui-kitten/components';
-import { GetRequest, GetMovieRequest } from '../utils/apiRequester'
-import { GetCategoryUrl, GetMovieListFromGenre, GetPopularMovies } from '../utils/apiUrls'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MovieCard from '../components/movieList/MovieCard';
+import { LoadingPage, ChangeGenreIndex } from '../store/actions/MovieListAction'
 
 const { width, height } = Dimensions.get("window");
 
@@ -18,22 +18,15 @@ class MovieListScreen extends React.Component  {
             MoviesList : ''
         }
     }
-
-    setSelectedIndex = async(index) => {
-        await this.setState({
-            selectedIndex:index,
-            displayValue : this.state.GenresList[index - 1].name,
-            MoviesList : (index !==0 ?  await GetMovieRequest(await GetMovieListFromGenre(this.state.GenresList[index-1].id)) :
-                                        await GetMovieRequest(await GetPopularMovies()))
-        })
+    
+    setSelectedIndex = (index) => {
+        this.props.ChangeGenreIndex(index,this.props.GenresList[index - 1].name, this.props.GenresList[index-1].id)
     }
 
-    async componentDidMount() {
-        this.setState({
-            GenresList : await GetRequest(await GetCategoryUrl()),
-            MoviesList : await GetMovieRequest(await GetPopularMovies())
-        })
+    componentDidMount() {
+        this.props.LoadingPage()
     }
+    
 
     renderOption = (data) => (
         <SelectItem key={data.id} title={data.name}/>
@@ -45,8 +38,8 @@ class MovieListScreen extends React.Component  {
 
     render(){
     let selectOptions;
-    if(this.state.GenresList != ''){
-        selectOptions = this.state.GenresList.map(this.renderOption)
+    if(this.props.GenresList != undefined && this.props.GenresList != '' ){
+        selectOptions = this.props.GenresList.map(this.renderOption)
     }
 
         return (
@@ -55,14 +48,14 @@ class MovieListScreen extends React.Component  {
                 <Layout level='1'>  
                     <Select
                     placeholder="Kategori Seçiniz"
-                    value={this.state.displayValue}
-                    selectedIndex={this.state.selectedIndex}
+                    value={this.props.displayValue}
+                    selectedIndex={this.props.selectedIndex}
                     onSelect={index => this.setSelectedIndex(index)}>
                     {selectOptions}        
                     </Select>
                 </Layout>
                 <View style={styles.mainView}>
-                    {this.state.MoviesList !== '' ? this.state.MoviesList.map(this.renderMovies) : <View></View>}
+                    {(this.props.MoviesList != undefined &&  this.props.MoviesList != '') ? this.props.MoviesList.map(this.renderMovies) : <View></View>}
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -76,4 +69,9 @@ const styles = StyleSheet.create({
     }
 });
 
-export default MovieListScreen;
+const mapStateToProps = ({ MovieListResponse })=>{
+    const {selectedIndex, displayValue, GenresList, MoviesList} = MovieListResponse
+    return {selectedIndex, displayValue, GenresList, MoviesList}
+}
+
+export default connect(mapStateToProps,{ LoadingPage,ChangeGenreIndex }) (MovieListScreen);

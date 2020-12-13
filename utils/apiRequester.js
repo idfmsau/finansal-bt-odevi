@@ -1,17 +1,15 @@
-export const GetRequest = async(url) => {
+export const GetRequest = async (url) => {
     let result = null
-    await fetch(url)
+    fetch(url)
         .then((response) => response.json())
-        .then((json) => (result = json.genres))
+        .then((json) => {return json.genres})
         .catch((ex) => console.log(ex))
-    return result;
 };
 
-export const GetMovieRequest = async(url) => {
+export const GetMovieRequest = (url) => {
     let result = null
-    await fetch(url)
+    fetch(url)
         .then((response) => response.json())
-        .then((json) => (result = json.results))
+        .then((json) => {return json.results})
         .catch((ex) => console.log(ex))
-    return result;
 };
