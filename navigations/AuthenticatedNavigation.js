@@ -1,19 +1,18 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
 import { Icon } from "@ui-kitten/components";
 // Screen imports
 import MovieListScreen from "../screens/MovieListScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 // Screen imports ending
 import IconHandler from '../utils/IconHandler'
+import DrawerNavigation from "./DrawerNavigation";
 
 const Tab = createBottomTabNavigator();
 
 
 const AuthenticatedNavigation = ({ navigation }) => {
   return (
-    <NavigationContainer>
       <Tab.Navigator activeColor="#f0edf6" inactiveColor="#3e2465" initialRouteName="Home" barStyle={{ backgroundColor: '#694fad' }}>
         <Tab.Screen
           name="home"
@@ -36,7 +35,7 @@ const AuthenticatedNavigation = ({ navigation }) => {
           }}
         />
         <Tab.Screen
-          name="Listem"
+          name="myList"
           component={MovieListScreen}
           options={{
             tabBarLabel: "Listem",
@@ -45,14 +44,14 @@ const AuthenticatedNavigation = ({ navigation }) => {
             ),
           }}
         />
-        <Tab.Screen name="ProfileScreen" component={ProfileScreen} options={{
+        <Tab.Screen name="profile" component={DrawerNavigation} options={{
             tabBarLabel: "Profilim",
+            
             tabBarIcon: ({ focused, color, size }) => (
                 IconHandler(focused, color, size, 'account-heart-outline')
             ),
           }} />
       </Tab.Navigator>
-    </NavigationContainer>
   );
 };
 
