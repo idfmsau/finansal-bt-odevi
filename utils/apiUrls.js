@@ -6,18 +6,7 @@ const MOVIE_IMAGE_URL = 'https://image.tmdb.org/t/p/original/';
 const POPULAR_MOVIES = 'movie/popular';
 const LANGUAGE_TR ='&language=tr-TR';
 
-export const GetCategoryUrl = async() => {
-     return API_URL + GENRE_LIST + API_KEY + LANGUAGE_TR;
-};
-
-export const GetMovieListFromGenre = async(genreId) => {
-     return API_URL + MOVIE_LIST_FROM_GENRE + API_KEY + '&with_genres=' + genreId + LANGUAGE_TR;
-}
 
 export const GetMovieImageUrl = async(imagePath) => {
      return MOVIE_IMAGE_URL + imagePath;
-};
-
-export const GetPopularMovies = async() => {
-     return API_URL + POPULAR_MOVIES + API_KEY + LANGUAGE_TR;
 };
