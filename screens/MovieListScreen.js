@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Layout, Select, SelectItem } from '@ui-kitten/components';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MovieCard from '../components/movieList/MovieCard';
-import { LoadingPage, ChangeGenreIndex } from '../store/actions/MovieListAction'
+import { LoadingPage, ChangeGenreIndex } from '../store/actions/MovieListAction';
 
 const { width, height } = Dimensions.get("window");
 

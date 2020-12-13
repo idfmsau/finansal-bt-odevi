@@ -1,7 +1,4 @@
 import { CHANGE_GENRE_INDEX, GET_CATEGORIES, GET_POPULAR_MOVIES } from '../types/MovieListType';
-import { GetRequest,GetMovieRequest } from '../../utils/apiRequester';
-import { GetCategoryUrl,GetMovieListFromGenre,GetPopularMovies } from '../../utils/apiUrls';
-import { Alert } from 'react-native';
 
 const API_URL = 'https://api.themoviedb.org/3/';
 const API_KEY= '?api_key=ae9c379c0a2f7020bfcc20e8fec6166e';

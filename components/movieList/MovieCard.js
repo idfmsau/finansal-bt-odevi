@@ -1,11 +1,21 @@
-import React from 'react'
-import { StyleSheet, Image, View, TouchableOpacity, Dimensions, Text, Alert } from 'react-native'
+import firebase from 'firebase';
+import React from 'react';
+import { StyleSheet, Image, View, TouchableOpacity, Dimensions, Text, Alert } from 'react-native';
 import { Card, Modal,Button  } from '@ui-kitten/components';
-
 import { GetMovieImageUrl } from '../../utils/apiUrls';
 
-
 const { width, height } = Dimensions.get("window");
+
+AddMovieFromList = (movieId) => {
+    const { currentUser } = firebase.auth();
+
+    firebase.database().ref(`/Listem/${currentUser.uid}`)
+            .push(movieId)
+            .then(() => {
+                Alert.alert("Hey!","Listene Başarıyla Eklendi.")
+        });
+}
+
 const MovieCard = (props) => {
     const [visible, setVisible] = React.useState(false);
     const [uri, setUri] = React.useState ('')
@@ -15,17 +25,18 @@ const MovieCard = (props) => {
     }; 
     getImgPath()
     },[])
+
     return (
         <>
             <View>
                 <TouchableOpacity
-                    onPress = {()=> Alert.alert('Listeye Eklendi.' + props.movieId)}
-                    onLongPress = {() => setVisible(true)}
-                >
-                    <Image
-                            style={styles.tinyLogo}
-                            source={{uri: uri}}
-                    />
+                        onPress = {()=> AddMovieFromList(props.movieId)}
+                        onLongPress = {() => setVisible(true)}
+                    >
+                        <Image
+                                style={styles.tinyLogo}
+                                source={{uri: uri}}
+                        />
                 </TouchableOpacity>
             </View>
             <View>
@@ -50,8 +61,6 @@ const MovieCard = (props) => {
     )
 }
 
-export default MovieCard;
-
 const styles = StyleSheet.create({
     tinyLogo: {
         width: width/3.3,
@@ -60,3 +69,5 @@ const styles = StyleSheet.create({
         borderRadius: 10
     }
 })
+
+export default MovieCard;
