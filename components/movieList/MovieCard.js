@@ -19,8 +19,8 @@ const MovieCard = (props) => {
         <>
             <View>
                 <TouchableOpacity
-                    onPress = {() => setVisible(true)}
-                    onLongPress = {()=> Alert.alert('Listeye Eklendi.')}
+                    onPress = {()=> Alert.alert('Listeye Eklendi.' + props.movieId)}
+                    onLongPress = {() => setVisible(true)}
                 >
                     <Image
                             style={styles.tinyLogo}

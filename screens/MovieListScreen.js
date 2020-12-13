@@ -1,8 +1,8 @@
 import React from 'react';
-import {StyleSheet, ScrollView, View, Dimensions } from 'react-native'
+import {StyleSheet, ScrollView, View, Dimensions, DatePickerAndroid } from 'react-native'
 import { Layout, Select, SelectItem } from '@ui-kitten/components';
 import { GetRequest, GetMovieRequest } from '../utils/apiRequester'
-import { GetCategoryUrl, GetMovieListFromGenre } from '../utils/apiUrls'
+import { GetCategoryUrl, GetMovieListFromGenre, GetPopularMovies } from '../utils/apiUrls'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MovieCard from '../components/movieList/MovieCard';
 
@@ -23,14 +23,15 @@ class MovieListScreen extends React.Component  {
         await this.setState({
             selectedIndex:index,
             displayValue : this.state.GenresList[index - 1].name,
-            MoviesList : (index !==0 ?  await GetMovieRequest(await GetMovieListFromGenre(this.state.GenresList[index-1].id)) : '')
-            
+            MoviesList : (index !==0 ?  await GetMovieRequest(await GetMovieListFromGenre(this.state.GenresList[index-1].id)) :
+                                        await GetMovieRequest(await GetPopularMovies()))
         })
     }
 
     async componentDidMount() {
         this.setState({
-            GenresList : await GetRequest(await GetCategoryUrl())
+            GenresList : await GetRequest(await GetCategoryUrl()),
+            MoviesList : await GetMovieRequest(await GetPopularMovies())
         })
     }
 
@@ -39,7 +40,7 @@ class MovieListScreen extends React.Component  {
     );
 
     renderMovies = (data) => (
-        <MovieCard key={data.id} name={data.original_title} desc={data.overview} rDate={data.release_date} imagePath={data.poster_path}/>
+        <MovieCard key={data.id} movieId={data.id} name={data.original_title} desc={data.overview} rDate={data.release_date} imagePath={data.poster_path}/>
     );
 
     render(){
