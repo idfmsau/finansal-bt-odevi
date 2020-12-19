@@ -1,18 +1,39 @@
 import React from "react";
-import { Button, View } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import ProfileScreen from '../screens/ProfileScreen'
-import LoginScreen from '../screens/LoginScreen'
+
+// Screen imports
+import ProfileScreen from "../screens/ProfileScreen";
+import RandomScreen from "../screens/RandomScreen";
+import MovieListScreen from "../screens/MovieListScreen";
+// Screen imports ending
 
 const Drawer = createDrawerNavigator();
 
-const DrawerNavigation = ({navigation}) => {
+const DrawerNavigation = ({ navigation }) => {
   return (
-      <Drawer.Navigator initialRouteName="Profile">
-        <Drawer.Screen name="Profilim" component={ProfileScreen} />
-        <Drawer.Screen name="Çıkış Yap" component={LoginScreen} />
-        {/* Buraya normalde logout mekanizması gelecek, isLoggedIn false yapılacak */}
-      </Drawer.Navigator>
+    <Drawer.Navigator initialRouteName="Profile">
+      <Drawer.Screen
+        name="profileScreen"
+        component={ProfileScreen}
+        options={{
+          drawerLabel: "Profilim",
+        }}
+      />
+      <Drawer.Screen
+        name="randomScreen"
+        component={RandomScreen}
+        options={{
+          drawerLabel: "Rastgele!",
+        }}
+      />
+      <Drawer.Screen
+        name="movieListScreen"
+        component={MovieListScreen}
+        options={{
+          drawerLabel: "Ana Sayfa",
+        }}
+      />
+    </Drawer.Navigator>
   );
 };
 
