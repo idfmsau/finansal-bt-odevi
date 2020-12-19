@@ -9,12 +9,12 @@ import SignupScreen from "../screens/SignupScreen";
 const Stack = createStackNavigator();
 
 const NonAuthenticatedNavigation = ({ navigation }) => {
-    return (
-          <Stack.Navigator>
-            <Stack.Screen name="LoginScreen" component={LoginScreen} />
-            <Stack.Screen name="SignupScreen" component={SignupScreen} />
-          </Stack.Navigator>
-    )
-}
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      <Stack.Screen name="SignupScreen" component={SignupScreen} />
+    </Stack.Navigator>
+  );
+};
 
-export default NonAuthenticatedNavigation
+export default NonAuthenticatedNavigation;

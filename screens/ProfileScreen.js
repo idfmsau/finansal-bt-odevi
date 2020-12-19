@@ -1,76 +1,95 @@
-import React from "react";
-import { StyleSheet, View, SafeAreaView, Dimensions } from "react-native";
-import { Avatar, Text, Button } from "@ui-kitten/components";
+import React, { useState, useEffect } from "react";
+import styles from "../styles/ProfileScreen.style";
+import firebase from "firebase";
+import { SafeAreaView, View } from "react-native";
+import { Avatar, Text } from "@ui-kitten/components";
 import { LinearGradient } from "expo-linear-gradient";
 import InfoBox from "../components/profile/InfoBox";
-import { ScrollView } from "react-native-gesture-handler";
+import { connect } from "react-redux";
+import MovieCard from "../components/movieList/MovieCard"; 
+import { GetFavouriteMovies } from "../store/actions/MovieListAction";
 
-const { width, height } = Dimensions.get("window");
+const GetMyListCount = (setFunc) => {
+  const { currentUser } = firebase.auth();
+  return firebase
+    .database()
+    .ref(`/Listem/${currentUser.uid}`)
+    .once("value")
+    .then((snapshot) => {
+      setFunc(snapshot.numChildren());
+    });
+};
 
-function ProfileScreen(props) {
-  const { userName, description } = props;
+// const GetMyList = (callbackFunction) => {
+//   const { currentUser } = firebase.auth();
+//   let myMovieList = [];
+//   firebase
+//     .database()
+//     .ref(`/Listem/${currentUser.uid}`)
+//     .once("value")
+//     .then((snapshot) => {
+//       myMovieList = Object.values(snapshot.val());
+//     });
+// };
+
+function ProfileScreen({ loggedUser, favouriteMovieList, GetFavouriteMovies }) {
+  const [lengthOfList, setLengthOfList] = useState(0);
+  useEffect(() => {
+    GetMyListCount(setLengthOfList);
+    GetFavouriteMovies();
+    //Buraya Redux ile çekme işlemi gelecek
+  }, []);
+
   return (
-        <SafeAreaView style={styles.container}>
-      <LinearGradient colors={['#FFB92A','#FFA400']} style={styles.profileBackground}>
+    <SafeAreaView style={styles.container}>
+      <LinearGradient
+        colors={["#FFB92A", "#FFA400"]}
+        style={styles.profileBackground}
+      >
         <Avatar
           style={styles.avatar}
           source={require("../images/12angrymen.jpg")}
         />
         <Text style={styles.userNameText} category="h6" status="basic">
-          Mustafa Emre ÖZMEN
+          {loggedUser.user.user.email}
         </Text>
       </LinearGradient>
-      <Button style={styles.followButton}>
+      {/* <Button style={styles.followButton} disabled>
         Takip Et
-      </Button>
+      </Button> */}
       <LinearGradient
         colors={["#D7E1EC", "#FFFFFF"]}
-        style={ styles.contentBackground }
+        style={styles.contentBackground}
       >
-        <InfoBox title='Listeye Eklenenler' value='1'></InfoBox>
-        <InfoBox></InfoBox>
+        <InfoBox title="Listeye Eklenenler" value={lengthOfList}></InfoBox>
+        <View style={styles.movieList}>
+          {/* {favouriteMovieList ? favouriteMovieList.map((item, index) => (
+              <MovieCard
+                key={index}
+                movieId={item.id}
+                name={item.original_title}
+                desc={item.overview}
+                rDate={item.release_date}
+                imagePath={item.poster_path}
+              />
+            )): <Text>Yükleniyor...</Text>} */}
+            {/* Buraya movieCard mapping gelecek */}
+        </View>
       </LinearGradient>
     </SafeAreaView>
   );
 }
 
+const mapStateToProps = (state) => {
+  return {
+    loggedUser: state.auth.loggedUser,
+    favouriteMovieList: state.MovieListResponse.favouriteMovieList,
+  };
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-  },
-  avatar: {
-    marginTop: height / 15,
-    width: 128,
-    height: 128,
-    borderWidth: 3,
-    borderColor: "black",
-  },
-  userNameText: {
-    marginTop: 20,
-    color: "white",
-  },
-  followButton: {
-    flexDirection: "row",
-    marginTop: -30,
-    backgroundColor: "#344768",
-    minWidth: width/2
-  },
-  profileBackground: {
-    flex: 2,
-    alignSelf: "stretch",
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: '#344768'
-  },
-  contentBackground: {
-    marginTop: -15,
-    flex: 2,
-    alignSelf: "stretch",
-    alignItems: "center",
-    zIndex: -1
-  },
-});
-
-export default ProfileScreen;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    GetFavouriteMovies: () => dispatch(GetFavouriteMovies()),
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);
