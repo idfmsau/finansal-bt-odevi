@@ -4,26 +4,24 @@ import NonAuthenticatedNavigation from "../navigations/NonAuthenticatedNavigatio
 import { NavigationContainer } from "@react-navigation/native";
 import { connect } from "react-redux";
 
-
-// import { Provider } from "react-redux";
-const RootNavigation = ({loggedUser}) => {
-    return (
-        <NavigationContainer>
-        {loggedUser.isLoggedIn ? (
-          <>
-            <AuthenticatedNavigation />
-          </>
-        ) : (
-          <NonAuthenticatedNavigation />
-        )}
-      </NavigationContainer>
-    )
-}
+const RootNavigation = ({ loggedUser }) => {
+  return (
+    <NavigationContainer>
+      {loggedUser.isLoggedIn ? (
+        <>
+          <AuthenticatedNavigation />
+        </>
+      ) : (
+        <NonAuthenticatedNavigation />
+      )}
+    </NavigationContainer>
+  );
+};
 
 const mapStateToProps = (state) => {
-    return {
-      loggedUser: state.auth.loggedUser,
-    };
+  return {
+    loggedUser: state.auth.loggedUser,
   };
+};
 
 export default connect(mapStateToProps)(RootNavigation);
