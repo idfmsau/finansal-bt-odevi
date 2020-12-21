@@ -7,7 +7,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   button: {
-    width: width / 2,
+    width: width,
+    borderRadius: 0,
     alignSelf: "center",
   },
   movieCard: {
