@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import styles from "../styles/ProfileScreen.style";
 import firebase from "firebase";
-import { SafeAreaView, View } from "react-native";
+import { FlatList, SafeAreaView, ScrollView, View } from "react-native";
 import { Avatar, Text } from "@ui-kitten/components";
 import { LinearGradient } from "expo-linear-gradient";
 import InfoBox from "../components/profile/InfoBox";
 import { connect } from "react-redux";
 import MovieCard from "../components/movieList/MovieCard"; 
 import { GetFavouriteMovies } from "../store/actions/MovieListAction";
+import {GetFavouriteFilms} from '../utils/apiRequester'
 
 const GetMyListCount = (setFunc) => {
   const { currentUser } = firebase.auth();
@@ -20,24 +21,34 @@ const GetMyListCount = (setFunc) => {
     });
 };
 
-// const GetMyList = (callbackFunction) => {
-//   const { currentUser } = firebase.auth();
-//   let myMovieList = [];
-//   firebase
-//     .database()
-//     .ref(`/Listem/${currentUser.uid}`)
-//     .once("value")
-//     .then((snapshot) => {
-//       myMovieList = Object.values(snapshot.val());
-//     });
-// };
+const GetMyList = (setFunc) => {
+  const { currentUser } = firebase.auth();
+  let values = [];
+  firebase
+    .database()
+    .ref(`/Listem/${currentUser.uid}`)
+    .once("value")
+    .then((snapshot) => {
+      setFunc(Object.values(snapshot.val()));
+    });
 
-function ProfileScreen({ loggedUser, favouriteMovieList, GetFavouriteMovies }) {
+    return values;
+};
+
+function ProfileScreen({ loggedUser }) {
   const [lengthOfList, setLengthOfList] = useState(0);
+  const [favouriteIds, setFavouriteIds] = useState('');
+  const [favouriteMovies, setFavouriteMovies] = useState(false);
+
   useEffect(() => {
-    GetMyListCount(setLengthOfList);
-    GetFavouriteMovies();
-    //Buraya Redux ile çekme işlemi gelecek
+    async function LoadData(){
+      await GetMyListCount(setLengthOfList);
+      await GetMyList(setFavouriteIds);
+      await GetFavouriteFilms(favouriteIds, setFavouriteMovies);
+    }
+    
+    LoadData();
+
   }, []);
 
   return (
@@ -54,26 +65,22 @@ function ProfileScreen({ loggedUser, favouriteMovieList, GetFavouriteMovies }) {
           {loggedUser.user.user.email}
         </Text>
       </LinearGradient>
-      {/* <Button style={styles.followButton} disabled>
-        Takip Et
-      </Button> */}
       <LinearGradient
         colors={["#D7E1EC", "#FFFFFF"]}
         style={styles.contentBackground}
       >
         <InfoBox title="Listeye Eklenenler" value={lengthOfList}></InfoBox>
         <View style={styles.movieList}>
-          {/* {favouriteMovieList ? favouriteMovieList.map((item, index) => (
-              <MovieCard
+        <ScrollView horizontal={true}>
+          {favouriteMovies ? favouriteMovies.map((item, index) => {return <MovieCard 
                 key={index}
                 movieId={item.id}
-                name={item.original_title}
+                name={item.original_title} 
                 desc={item.overview}
                 rDate={item.release_date}
                 imagePath={item.poster_path}
-              />
-            )): <Text>Yükleniyor...</Text>} */}
-            {/* Buraya movieCard mapping gelecek */}
+              />}): <Text>Yükleniyor...</Text>}
+        </ScrollView>
         </View>
       </LinearGradient>
     </SafeAreaView>

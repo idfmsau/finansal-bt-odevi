@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     zIndex: -1,
   },
   movieList: {
-    flexDirection: "row",
+    flex: 2,
   },
 });
 

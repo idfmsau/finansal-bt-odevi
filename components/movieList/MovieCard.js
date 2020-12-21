@@ -34,7 +34,7 @@ const MovieCard = (props) => {
                         onLongPress = {() => setVisible(true)}
                     >
                         <Image
-                                style={styles.tinyLogo}
+                                style={props.isRandomScreen ? styles.randomScreenLogo : styles.tinyLogo}
                                 source={{uri: uri}}
                         />
                 </TouchableOpacity>
@@ -67,6 +67,12 @@ const styles = StyleSheet.create({
         height: height/3.8,
         margin:width/70,
         borderRadius: 10
+    },
+    randomScreenLogo: {
+        marginTop: -height/5,
+        borderRadius: 0,
+        width: width,
+        height: height,
     }
 })
 
