@@ -30,7 +30,7 @@ function ProfileScreen({ loggedUser, navigation, favouriteMovieList,  GetFavouri
         <InfoBox title="Listemde Neler Var?" value={favouriteMovieList.length}></InfoBox>
         <ScrollView>
         <View style={styles.mainView}>
-          {favouriteMovieList ? favouriteMovieList.map((item, index) => (
+          {favouriteMovieList.length>0 ? favouriteMovieList.map((item, index) => (
               <MovieCard
                 key={index}
                 movieId={item.id}
