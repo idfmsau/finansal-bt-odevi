@@ -8,12 +8,25 @@ const { width, height } = Dimensions.get("window");
 
 AddMovieFromList = (movieId) => {
     const { currentUser } = firebase.auth();
+    let check=true
+    let movieIds = [];
 
-    firebase.database().ref(`/Listem/${currentUser.uid}`)
+    firebase
+        .database()
+        .ref(`/Listem/${currentUser.uid}`)
+        .once("value")
+        .then((snapshot) => 
+        Object.values(snapshot.val()==null || snapshot.val()==undefined? [] : snapshot.val()  ))
+        .then((list)=>{
+        if(list.includes(movieId)) Alert.alert('Hey!','Bu film zaten listende ekli! Şansını farklı filmlerde dene :) ')
+        else{
+            firebase.database().ref(`/Listem/${currentUser.uid}`)
             .push(movieId)
             .then(() => {
                 Alert.alert("Hey!","Listene Başarıyla Eklendi.")
-        });
+            }).catch((ex)=>{console.log(ex)});
+        }
+    }).catch((ex)=>{console.log(ex)});
 }
 
 const MovieCard = (props) => {
