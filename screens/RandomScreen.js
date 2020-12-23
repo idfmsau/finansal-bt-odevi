@@ -12,15 +12,9 @@ const RandomScreen = ({ randomMovie, GetRandomMovie }) => {
   }, []);
   return (
     <SafeAreaView style={styles.container}>
-      <Button
-        style={styles.button}
-        status="success"
-        onPress={() => GetRandomMovie()}
-      >
-        Bana Film Bul!
-      </Button>
       <View style={styles.movieCard}>
         <MovieCard
+          isRandomScreen={true}
           key={randomMovie.id}
           movieId={randomMovie.id}
           name={randomMovie.original_title}
@@ -29,6 +23,13 @@ const RandomScreen = ({ randomMovie, GetRandomMovie }) => {
           imagePath={randomMovie.poster_path}
         />
       </View>
+      <Button
+        style={styles.button}
+        status="success"
+        onPress={() => GetRandomMovie()}
+      >
+        Bana Film Bul!
+      </Button>
     </SafeAreaView>
   );
 };
