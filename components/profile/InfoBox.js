@@ -1,6 +1,8 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
-import { Text, Card } from "@ui-kitten/components";
+import { View, StyleSheet, Dimensions } from "react-native";
+import { Text } from "@ui-kitten/components";
+
+const { width, height } = Dimensions.get("window");
 
 const InfoBox = (props) => {
   const { title, value } = props;
@@ -8,10 +10,10 @@ const InfoBox = (props) => {
   return (
     <View style={styles.container}>
         <View>
-      <Text category="h2" status='basic'>{title}</Text>
+      <Text category="h5" status='basic'>{title}</Text>
         </View>
         <View>
-      <Text category="h3" status='info'>{value}</Text>
+      <Text category="h5" status='info'>{value}</Text>
         </View>
     </View>
   );
@@ -23,11 +25,10 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     alignItems: 'center',
     justifyContent:'space-between',
-    padding: 24,
+    padding: width/40,
     marginBottom: 1,
     backgroundColor: 'white',
-    flex: 1,
-    maxHeight: 75,
+    maxHeight: height/10,
   },
   text: {
   },
