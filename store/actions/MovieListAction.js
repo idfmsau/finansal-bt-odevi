@@ -5,6 +5,7 @@ import {
   GET_FAVOURITE_MOVIES,
   GET_POPULAR_MOVIES,
   GET_RANDOM_MOVIE,
+  DELETE_FAVORITE_MOVIE_LIST
 } from "../types/MovieListType";
 
 const API_URL = "https://api.themoviedb.org/3/";
@@ -66,34 +67,33 @@ export const ChangeGenreIndex = (index, displayValue, genreId) => {
   };
 };
 export const GetFavouriteMovies = () => {
-    
-  const { currentUser } = firebase.auth();
-  let filmInfos = [];
-  let movieIds = [];
-
-  firebase
-    .database()
-    .ref(`/Listem/${currentUser.uid}`)
-    .once("value")
-    .then((snapshot) => {
-      movieIds = Object.values(snapshot.val());
-    });
-
   return (dispatch) => {
-    for (let movieId of movieIds) {
-      let movieUrl = API_URL + "movie/" + movieId + API_KEY + LANGUAGE_TR;
-      fetch(movieUrl)
-        .then((response) => response.json())
-        .then((json) => {
-          filmInfos.push(json);
-        })
-        .catch((ex) => console.log(ex));
-    }
-
     dispatch({
-      type: GET_FAVOURITE_MOVIES,
-      payload: filmInfos,
+      type: DELETE_FAVORITE_MOVIE_LIST
     });
+    const { currentUser } = firebase.auth();
+    let movieIds = [];
+  
+    firebase
+      .database()
+      .ref(`/Listem/${currentUser.uid}`)
+      .once("value")
+      .then((snapshot) => {
+        movieIds = Object.values(snapshot.val());
+        for (let movieId of movieIds) {
+          let movieUrl = API_URL + "movie/" + movieId + API_KEY + LANGUAGE_TR;
+          fetch(movieUrl)
+            .then((response) => response.json())
+            .then((json) => {
+              dispatch({
+                type: GET_FAVOURITE_MOVIES,
+                payload: json,
+              });
+            })
+            .catch((ex) => console.log(ex));
+        }
+      })
+      
   };
 };
 export const GetRandomMovie = () => {

@@ -25,12 +25,11 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   profileBackground: {
-    flex: 2,
     alignSelf: "stretch",
     alignItems: "center",
     borderBottomWidth: 1,
     borderBottomColor: "#344768",
-    maxHeight: height / 2
+    maxHeight: height / 10
     
   },
   contentBackground: {
@@ -41,8 +40,12 @@ const styles = StyleSheet.create({
     zIndex: -1,
   },
   movieList: {
-    flex: 2,
+    flexDirection: "row",
   },
+  mainView: {
+    flexDirection:'row',
+    flexWrap:'wrap'
+}
 });
 
 export default styles;
